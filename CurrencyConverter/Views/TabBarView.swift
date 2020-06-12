@@ -25,7 +25,7 @@ struct TabBarView: View {
                 .tabItem {
                     VStack {
                         Image("second")
-                        Text("Setting")
+                        Text("Author")
                     }
                 }
                 .tag(1)
