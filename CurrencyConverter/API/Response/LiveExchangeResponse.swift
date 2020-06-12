@@ -8,20 +8,18 @@
 
 import Foundation
 
-// MARK: - Live
-
 struct LiveExchangeResponse: Codable {
-    let success: Bool?
     let terms, privacy: String?
     let timestamp: Int?
     let source: String?
-    let quotes: [String: Double]?
+    var quotes: [String: Double]
+    let success: Bool
+    let error: ErrorResponse?
 }
 
-struct CurrencyConversionResponse: Codable {
-    
-}
+// Mark :- Currency Quote
 
-struct CurrencyListResponse: Codable {
-    
+struct ExchangeRate: Codable {
+    let currency: String
+    let rate: Double
 }

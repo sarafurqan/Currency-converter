@@ -11,32 +11,26 @@ import UIKit
 struct LiveExchangeRequest {
     static let sharedInstance: LiveExchangeRequest = LiveExchangeRequest()
     
-    private let liveApiUrl: String = "live"
+    private let apiUrl: String = "live"
     
     func getLiveExchange(
         success: @escaping (LiveExchangeResponse?) -> Void,
-        failure: @escaping (Error?) -> Void) {
+        failure: @escaping (ErrorResponse?) -> Void) {
         
-        if let url = URL.with(string: liveApiUrl) {
-            
-            var urlRequest = URLRequest(url: url)
-            urlRequest.httpMethod = "GET"
-            
-            print(urlRequest)
-            
-            URLSession.shared.dataTask(with: urlRequest) { data, response, error in
+        APIManager.sharedInstance.requestApi(
+            apiUrl: apiUrl,
+            params: nil,
+            handler: {data, response, error in
                 if let data = data {
                     do {
-                        let live = try JSONDecoder().decode(LiveExchangeResponse.self, from: data)
-                        print(live)
-                        success(live)
+                        let response = try JSONDecoder().decode(LiveExchangeResponse.self, from: data)
+                        success(response)
                     } catch let error {
                         print(error)
-                        failure(error)
+                        failure(ErrorResponse(code: -1, info: "Something went wrong"))
                     }
                 }
-            }.resume()
-        }
+        })
     }
 }
 
@@ -56,4 +50,5 @@ extension URL {
         }
         return URL(string: url)
     }
+    
 }

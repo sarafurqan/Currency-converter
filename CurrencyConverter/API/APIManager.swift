@@ -9,14 +9,9 @@
 import Foundation
 import UIKit
 
-struct RequestType {
-    static let  POST = "POST"
-    static let  GET = "GET"
-}
-
-enum HttpType: String {
-    case POST = "POST"
-    case GET  = "GET"
+enum HttpMethod: String {
+    case post = "POST"
+    case get  = "GET"
 }
 
 class APIManager: NSObject {
@@ -25,113 +20,27 @@ class APIManager: NSObject {
     
     private override init() {}
     
-    private let baseUrl: String = "http://api.currencylayer.com/"
-    private let accessKey: String = "ed77e0915315e85dfdb27ca2cf0bffaa"
-    
-    // First Method
-    
-    public func requestApiWithDictParam(
-        dictParam: Dictionary<String,Any>,
-        apiName: String,
-        requestType: String,
-        isAddCookie: Bool,
-        completionHendler:@escaping (_ response:Dictionary<String,AnyObject>?, _ error: NSError?, _ success: Bool)-> Void) {
+    public func requestApi(httpMethod: String = HttpMethod.get.rawValue, apiUrl: String, params: String?, handler: @escaping (Data?, URLResponse?, Error?)-> Void) {
         
-        var apiUrl = baseUrl
-        apiUrl =  apiUrl.appendingFormat("%@", apiName)
-        
-        let config = URLSessionConfiguration.default
-        let session = URLSession(configuration: config)
-        let url = URL(string: apiUrl)!
-        
-        let HTTPHeaderField_ContentType  = "Content-Type"
-        let ContentType_ApplicationJson  = "application/json"
-        var request = URLRequest.init(url: url)
-        
-        request.timeoutInterval = 60.0
-        request.cachePolicy = URLRequest.CachePolicy.reloadIgnoringLocalCacheData
-        request.addValue(ContentType_ApplicationJson, forHTTPHeaderField: HTTPHeaderField_ContentType)
-        request.httpMethod = requestType
-        
-        print(apiUrl)
-        print(dictParam)
-        
-        let dataTask = session.dataTask(with: request) { (data, response, error) in
+        if let url = URL.with(string: apiUrl, param: params) {
             
-            if error != nil   {
-                completionHendler(nil, error as NSError?, false)
-            }
+            var urlRequest = URLRequest(url: url)
+            urlRequest.httpMethod = httpMethod
+            let config = URLSessionConfiguration.default
+            let session = URLSession(configuration: config)
+            let HTTPHeaderField_ContentType  = "Content-Type"
+            let ContentType_ApplicationJson  = "application/json"
+            urlRequest.timeoutInterval = 60.0
+            urlRequest.cachePolicy = URLRequest.CachePolicy.reloadIgnoringLocalCacheData
+            urlRequest.addValue(ContentType_ApplicationJson, forHTTPHeaderField: HTTPHeaderField_ContentType)
             
-            do {
-                let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
-                print("Request API = ", apiUrl)
-                print("API Response = ", resultJson ?? "")
-                completionHendler(resultJson, nil, true)
-                
-            } catch {
-                completionHendler(nil, error as NSError?, false)
+            print(urlRequest)
+            
+            let dataTask = session.dataTask(with: urlRequest) { data, response, error in
+                handler(data, response, error as? Error)
             }
+            dataTask.resume()
         }
-        dataTask.resume()
-    }
-    
-    // Second Method
-    public func requestApiWithUrlString(param: String, apiName: String,requestType: String, isAddCookie: Bool, completionHendler:@escaping (_ response:Dictionary<String,AnyObject>?, _ error: NSError?, _ success: Bool)-> Void ) {
-        var apiUrl = "" // Your api url
-        let config = URLSessionConfiguration.default
-        let session = URLSession(configuration: config)
-        var request: URLRequest?
-        
-        if requestType == "GET" {
-            
-            apiUrl =  String(format: "%@%@&%@", baseUrl,apiName,param)
-            apiUrl = apiUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-            print("URL=",apiUrl)
-            
-            let url = URL(string: apiUrl)!
-            request = URLRequest.init(url: url)
-            request?.httpMethod = "GET"
-            
-        } else {
-            
-            apiUrl =  String(format: "%@%@", baseUrl,apiName)
-            apiUrl = apiUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-            print("URL=",apiUrl)
-            
-            let bodyParameterData = param.data(using: .utf8)
-            let url = URL(string: apiUrl)!
-            
-            request = URLRequest(url: url)
-            request?.httpBody = bodyParameterData
-            request?.httpMethod = "POST"
-        }
-        
-        request?.timeoutInterval = 60.0
-        request?.cachePolicy = URLRequest.CachePolicy.reloadIgnoringLocalCacheData
-        request?.httpShouldHandleCookies = true
-        
-        let dataTask = session.dataTask(with: request!) { (data, response, error) in
-            
-            if error != nil {
-                completionHendler(nil, error as NSError?, false)
-                return
-            }
-            
-            do {
-                if data != nil  {
-                    let resultJson = try JSONSerialization.jsonObject(with: data!, options: []) as? [String:AnyObject]
-                    
-                    print("Request API = ", apiUrl)
-                    print("API Response = ",resultJson ?? "")
-                    completionHendler(resultJson, nil, true)
-                } else  {
-                    completionHendler(nil, error as NSError?, false)
-                }
-            } catch {
-                completionHendler(nil, error as NSError?, false)
-            }
-        }
-        dataTask.resume()
     }
 }
 

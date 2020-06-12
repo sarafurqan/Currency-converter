@@ -22,6 +22,9 @@
 		CA858F15249129DE00C3D716 /* LiveExchangeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA858F14249129DE00C3D716 /* LiveExchangeRequest.swift */; };
 		CA858F1824914D2D00C3D716 /* CurrencyListRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA858F1724914D2D00C3D716 /* CurrencyListRequest.swift */; };
 		CA858F1A24914D5300C3D716 /* CurrencyConversionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA858F1924914D5300C3D716 /* CurrencyConversionRequest.swift */; };
+		CA858F1C2491F0AC00C3D716 /* CurrencyConversionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA858F1B2491F0AC00C3D716 /* CurrencyConversionResponse.swift */; };
+		CA858F202491F0EC00C3D716 /* CurrencyListResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA858F1F2491F0EC00C3D716 /* CurrencyListResponse.swift */; };
+		CA858F22249364A600C3D716 /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA858F21249364A600C3D716 /* ErrorResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +46,9 @@
 		CA858F16249143F700C3D716 /* CurrencyConverter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CurrencyConverter.entitlements; sourceTree = "<group>"; };
 		CA858F1724914D2D00C3D716 /* CurrencyListRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyListRequest.swift; sourceTree = "<group>"; };
 		CA858F1924914D5300C3D716 /* CurrencyConversionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyConversionRequest.swift; sourceTree = "<group>"; };
+		CA858F1B2491F0AC00C3D716 /* CurrencyConversionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyConversionResponse.swift; sourceTree = "<group>"; };
+		CA858F1F2491F0EC00C3D716 /* CurrencyListResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyListResponse.swift; sourceTree = "<group>"; };
+		CA858F21249364A600C3D716 /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,13 +125,32 @@
 		CA858F0F2491279C00C3D716 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				CA858F122491290900C3D716 /* LiveExchangeResponse.swift */,
-				CA858F14249129DE00C3D716 /* LiveExchangeRequest.swift */,
-				CA858F1724914D2D00C3D716 /* CurrencyListRequest.swift */,
-				CA858F1924914D5300C3D716 /* CurrencyConversionRequest.swift */,
+				CA858F1D2491F0B700C3D716 /* Response */,
+				CA858F1E2491F0C500C3D716 /* Request */,
 				CA858F102491289200C3D716 /* APIManager.swift */,
 			);
 			path = API;
+			sourceTree = "<group>";
+		};
+		CA858F1D2491F0B700C3D716 /* Response */ = {
+			isa = PBXGroup;
+			children = (
+				CA858F1B2491F0AC00C3D716 /* CurrencyConversionResponse.swift */,
+				CA858F1F2491F0EC00C3D716 /* CurrencyListResponse.swift */,
+				CA858F122491290900C3D716 /* LiveExchangeResponse.swift */,
+				CA858F21249364A600C3D716 /* ErrorResponse.swift */,
+			);
+			path = Response;
+			sourceTree = "<group>";
+		};
+		CA858F1E2491F0C500C3D716 /* Request */ = {
+			isa = PBXGroup;
+			children = (
+				CA858F14249129DE00C3D716 /* LiveExchangeRequest.swift */,
+				CA858F1724914D2D00C3D716 /* CurrencyListRequest.swift */,
+				CA858F1924914D5300C3D716 /* CurrencyConversionRequest.swift */,
+			);
+			path = Request;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -199,6 +224,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA858F22249364A600C3D716 /* ErrorResponse.swift in Sources */,
+				CA858F1C2491F0AC00C3D716 /* CurrencyConversionResponse.swift in Sources */,
+				CA858F202491F0EC00C3D716 /* CurrencyListResponse.swift in Sources */,
 				CA858EF12490ED2900C3D716 /* AppDelegate.swift in Sources */,
 				CA858F1A24914D5300C3D716 /* CurrencyConversionRequest.swift in Sources */,
 				CA858F15249129DE00C3D716 /* LiveExchangeRequest.swift in Sources */,

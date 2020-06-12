@@ -10,8 +10,11 @@ import SwiftUI
 
 struct SettingView: View {
     var body: some View {
-        Text("Second View")
-            .font(.title)
+        VStack{
+            Text("Currency Converter")
+                .font(.title)
+            Text("Sara Furqan | Application Engineer")
+        }
     }
 }
 
