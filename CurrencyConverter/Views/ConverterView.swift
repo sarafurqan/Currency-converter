@@ -35,25 +35,38 @@ struct ConverterView: View {
                         self.model.indexSelectedCurrency = index
                         self.shouldShowCurrencyList = false
                     }) {
-                        Text("\(self.model.availableCurrencies![index].code) : \(self.model.availableCurrencies![index].name)")
+                        HStack {
+                            Text("\(self.model.availableCurrencies![index].code)")
+                            Spacer()
+                            Text("\(self.model.availableCurrencies![index].name)")
+                        }
+                        .frame(maxWidth: .infinity)
                     }
                 }
             }
         }
+        .alert(isPresented: self.$model.showAlert) {
+            Alert(title: Text(self.model.errorMessage))
+        }
         .onAppear {
+            
             // check local storage
-            let currencies = UserDefaults.standard.object(forKey: UserDefaultKey.currencyList.rawValue) as? [CountryCurrency]
-            if currencies == nil {
-                self.model.loadAvailableCurrencies()
-            } else {
-                self.model.availableCurrencies = currencies
+            let defaults = UserDefaults.standard
+            
+            if self.model.availableCurrencies == nil {
+                if let currencies = defaults.object(forKey: UserDefaultKey.currencyList.rawValue) as? Data, let loadedCurrencies = try? PropertyListDecoder().decode(Array<CountryCurrency>.self, from: currencies) as [CountryCurrency] {
+                    self.model.availableCurrencies = loadedCurrencies
+                } else {
+                    self.model.loadAvailableCurrencies()
+                }
             }
             
-            let rates = UserDefaults.standard.object(forKey: UserDefaultKey.exchangeRates.rawValue) as? [ExchangeRate]
-            if rates == nil {
-                self.model.loadLiveExchangeRates()
-            } else {
-                self.model.exchangeRates = rates
+            if self.model.convertedRates == nil {
+                if let rates = defaults.object(forKey: UserDefaultKey.exchangeRates.rawValue) as? Data, let loadedRates = try? PropertyListDecoder().decode(Array<ExchangeRate>.self, from: rates) as [ExchangeRate] {
+                    self.model.exchangeRates = loadedRates
+                } else {
+                    self.model.loadLiveExchangeRates()
+                }
             }
         }
     }
@@ -111,19 +124,21 @@ struct ConverterView: View {
     
     var resultView: some View {
         VStack(alignment: .leading) {
-            Text("Result (\(model.exchangeRates?.count ?? 0))")
+            Text("Result (\(model.convertedRates?.count ?? 0))")
                 .font(.headline)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.top, 20)
                 .padding(.bottom, 10)
             
             Divider().background(Color.gray)
-            if model.exchangeRates != nil {
-                List(0..<self.model.exchangeRates!.count) { index in
+            if model.convertedRates != nil {
+                List(0..<self.model.convertedRates!.count) { index in
                     HStack {
-                        Text("\(self.model.exchangeRates![index].currency)")
-                        Text("\(self.model.exchangeRates![index].rate)")
+                        Text("\(self.model.convertedRates![index].currency)")
+                        Spacer()
+                        Text("\(self.model.convertedRates![index].rate)")
                     }
+                    .frame(maxWidth: .infinity)
                 }.padding(.bottom, .zero)
             }
         }
